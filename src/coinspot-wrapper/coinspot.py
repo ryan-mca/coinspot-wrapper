@@ -183,3 +183,18 @@ class ROCoinspotAPI():
         headers = self._create_headers(sign)
         
         return requests.post(RO_API_BASE_URL + "/status", headers=headers, data=json.dumps(postdata))
+    
+    def open_market_orders(self, coin, market=None):
+        postdata = {
+            "nonce": int(time.time()*1000000),
+            "cointype": coin,
+        }
+        
+        if market:
+            postdata["markettype"] = market
+        
+        sign = self._create_hmac(postdata)
+        
+        headers = self._create_headers(sign)
+        
+        return requests.post(RO_API_BASE_URL + "/orders/market/open", headers=headers, data=json.dumps(postdata))
