@@ -1,6 +1,23 @@
+"""
+Gives access to CoinSpots APIs
+
+Only supports API V2
+
+Classes:
+    PublicCoinspotAPI()
+    CoinspotAPI()
+    ROCoinspotAPI()
+"""
+
+import hmac
+import hashlib
+import time
+import urllib.parse
 import requests
 
-PUB_API_BASE_URL = "https://www.coinspot.com.au/pubapi/v2" 
+PUB_API_BASE_URL = "https://www.coinspot.com.au/pubapi/v2"
+RO_API_BASE_URL = "https://www.coinspot.com.au/api/v2/ro"
+API_BASE_URL = "https://www.coinspot.com.au/api/v2"
 
 class PublicCoinspotAPI():
     """Gives access to all public Coinspot API
@@ -12,9 +29,9 @@ class PublicCoinspotAPI():
         Returns:
             requests.Response
         """
-        
+
         return requests.get(f"{PUB_API_BASE_URL}/latest")
-    
+
     def latest_coin_price(self, coin) -> requests.Response:
         """https://www.coinspot.com.au/v2/api#latestpricescoin
         
@@ -24,9 +41,9 @@ class PublicCoinspotAPI():
         Returns:
             requests.Response
         """
-        
+
         return requests.get(PUB_API_BASE_URL + "/latest/" + coin)
-    
+
     def latest_coin_market_price(self, coin, market) -> requests.Response:
         """https://www.coinspot.com.au/v2/api#latestpricescoinmarket
 
@@ -37,9 +54,9 @@ class PublicCoinspotAPI():
         Returns:
             requests.Response 
         """
-        
+
         return requests.get(PUB_API_BASE_URL + "/latest/" + f"{coin}/{market}")
-    
+
     def latest_buy_price(self, coin) -> requests.Response:
         """https://www.coinspot.com.au/v2/api#latestbuyprice
 
@@ -49,9 +66,9 @@ class PublicCoinspotAPI():
         Returns:
             requests.Response
         """
-        
+
         return requests.get(PUB_API_BASE_URL + "/buyprice/" + coin)
-    
+
     def latest_buy_market_price(self, coin, market) -> requests.Response:
         """https://www.coinspot.com.au/v2/api#latestbuypricenonfiat
 
@@ -62,9 +79,9 @@ class PublicCoinspotAPI():
         Returns:
             requests.Response
         """
-        
+
         return requests.get(PUB_API_BASE_URL + "/buyprice/" + f"{coin}/{market}")
-    
+
     def latest_sell_price(self, coin) -> requests.Response:
         """https://www.coinspot.com.au/v2/api#latestsellprice
 
@@ -74,9 +91,9 @@ class PublicCoinspotAPI():
         Returns:
             requests.Response
         """
-        
+
         return requests.get(PUB_API_BASE_URL + "/sellprice/" + coin)
-    
+
     def latest_sell_market_price(self, coin, market) -> requests.Response:
         """https://www.coinspot.com.au/v2/api#latestsellpricenonfiat
 
@@ -87,9 +104,9 @@ class PublicCoinspotAPI():
         Returns:
             requests.Response
         """
-        
+
         return requests.get(PUB_API_BASE_URL + "/sellprice/" + f"{coin}/{market}")
-    
+
     def open_orders_coin(self, coin) -> requests.Response:
         """https://www.coinspot.com.au/v2/api#openorders
 
@@ -99,9 +116,9 @@ class PublicCoinspotAPI():
         Returns:
             requests.Response
         """
-        
+
         return requests.get(PUB_API_BASE_URL + "/orders/open/" + {coin})
-    
+
     def open_orders_coin_market(self, coin, market) -> requests.Response:
         """https://www.coinspot.com.au/v2/api#openordersmarket
 
@@ -112,9 +129,9 @@ class PublicCoinspotAPI():
         Returns:
             requests.Response
         """
-        
+
         return requests.get(PUB_API_BASE_URL + "/orders/open/" + f"{coin}/{market}")
-    
+
     def completed_orders_coin(self, coin) -> requests.Response:
         """https://www.coinspot.com.au/v2/api#historders
 
@@ -124,9 +141,9 @@ class PublicCoinspotAPI():
         Returns:
             requests.Response
         """
-        
+
         return requests.get(PUB_API_BASE_URL + "orders/completed/" + coin)
-    
+
     def completed_orders_coin_market(self, coin, market) -> requests.Response:
         """https://www.coinspot.com.au/v2/api#histordersmarket
 
@@ -137,5 +154,13 @@ class PublicCoinspotAPI():
         Returns:
             requests.Response
         """
-        
+
         return requests.get(PUB_API_BASE_URL + "/orders/completed/" + f"{coin}/{market}")
+
+class ROCoinspotAPI():
+    def __init__(self, pub_key, priv_key) -> None:
+        self.pub_key = pub_key
+        self.priv_key = priv_key
+    
+    def read_only_status_check(self):
+        return requests.post()
