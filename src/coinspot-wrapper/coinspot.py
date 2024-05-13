@@ -10,9 +10,9 @@ Classes:
 """
 
 import hmac
-import hashlib
+import json
 import time
-import urllib.parse
+import hashlib
 import requests
 
 PUB_API_BASE_URL = "https://www.coinspot.com.au/pubapi/v2"
@@ -162,5 +162,24 @@ class ROCoinspotAPI():
         self.pub_key = pub_key
         self.priv_key = priv_key
     
+    def _create_hmac(self, postdata):
+        return hmac.new(self.priv_key.encode("utf-8"), json.dumps(postdata, separators=(",", ":")).encode("utf-8"), hashlib.sha512).hexdigest()
+    
+    def _create_headers(self, sign):
+        return {
+            "Content-type": "application/json",
+            "Accept": "text/plain",
+            "key": self.pub_key,
+            "sign": sign
+        }
+    
     def read_only_status_check(self):
-        return requests.post()
+        postdata = {
+            "nonce": int(time.time()*1000000)
+        }
+        
+        sign = self._create_hmac(postdata)
+        
+        headers = self._create_headers(sign)
+        
+        return requests.post(RO_API_BASE_URL + "/status", headers=headers, data=json.dumps(postdata))
