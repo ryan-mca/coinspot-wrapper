@@ -218,3 +218,13 @@ class ROCoinspotAPI():
         headers = self._create_headers(sign)
         
         return requests.post(RO_API_BASE_URL + " /orders/market/completed", headers=headers, data=json.dumps(postdata))
+    
+    def my_coin_balances(self):
+        postdata = {
+            "nonce": int(time.time()*1000000)
+        }
+        
+        sign = self._create_hmac(postdata)
+        headers = self._create_headers(sign)
+        
+        return requests.post(RO_API_BASE_URL + "/my/balances", headers=headers, data=json.dumps(postdata))
