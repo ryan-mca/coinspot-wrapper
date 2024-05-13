@@ -198,3 +198,23 @@ class ROCoinspotAPI():
         headers = self._create_headers(sign)
         
         return requests.post(RO_API_BASE_URL + "/orders/market/open", headers=headers, data=json.dumps(postdata))
+    
+    def completed_market_orders(self, coin, market=None, startdate=None, enddate=None, limit=None):
+        postdata = {
+            "nonce": int(time.time()*1000000),
+            "cointype": coin
+        }
+        
+        if market:
+            postdata["markettype"] = market
+        if startdate:
+            postdata["startdate"] = startdate
+        if enddate:
+            postdata["enddate"] = enddate
+        if limit:
+            postdata["limit"] = limit
+        
+        sign = self._create_hmac(postdata)
+        headers = self._create_headers(sign)
+        
+        return requests.post(RO_API_BASE_URL + " /orders/market/completed", headers=headers, data=json.dumps(postdata))
